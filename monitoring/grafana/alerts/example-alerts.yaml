@@ -1,0 +1,43 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: example-alerts
+    folder: alerts
+    interval: 1m
+    rules:
+      - uid: example-target-down
+        title: Target Down
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: VictoriaMetrics
+            model:
+              expr: up == 0
+              refId: A
+          - refId: C
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: "-100"
+            model:
+              conditions:
+                - evaluator:
+                    params: [0]
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+              refId: C
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "Target {{ $labels.instance }} is down"
+        labels:
+          severity: warning

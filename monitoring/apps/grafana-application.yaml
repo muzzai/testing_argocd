@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@gitlab.alloysoftware.com:maintainers/gitops.git
+    targetRevision: main
+    path: monitoring/grafana
+    helm:
+      valueFiles:
+        - values/datasources.yaml
+        - values/persistence.yaml
+        - values/env.yaml
+        - values/sidecar.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring-grafana
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+    syncOptions:
+      - CreateNamespace=true

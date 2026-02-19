@@ -1,0 +1,9 @@
+apiVersion: v2
+name: victoria-logs-cluster-wrapper
+description: Local wrapper chart for VictoriaLogs cluster via upstream chart
+type: application
+version: 0.1.0
+dependencies:
+  - name: victoria-logs-cluster
+    version: 0.0.27
+    repository: https://victoriametrics.github.io/helm-charts

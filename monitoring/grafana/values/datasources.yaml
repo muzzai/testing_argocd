@@ -1,0 +1,18 @@
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: VictoriaMetrics
+        type: prometheus
+        url: http://vmc-victoria-metrics-cluster-vmselect.default.svc.cluster.local:8481/select/0/prometheus/
+        access: proxy
+        isDefault: true
+        jsonData:
+          timeInterval: 30s
+
+      - name: VictoriaLogs
+        type: victoriametrics-logs-datasource
+        url: http://vlc-victoria-logs-cluster-vlselect.default.svc.cluster.local:9471/
+        access: proxy
+        jsonData:
+          maxLines: 1000
