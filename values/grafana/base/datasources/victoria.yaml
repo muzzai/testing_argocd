@@ -5,7 +5,7 @@ datasources:
       - name: VictoriaMetrics
         uid: victoria-metrics
         type: prometheus
-        url: http://vmc-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/
+        url: http://victoria-metrics-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8480/select/0/prometheus/
         access: proxy
         isDefault: true
         jsonData:
@@ -13,7 +13,7 @@ datasources:
       - name: VictoriaLogs
         uid: victoria-logs
         type: victoriametrics-logs-datasource
-        url: http://vlc-victoria-logs-cluster-vlselect.monitoring.svc.cluster.local:9471/
+        url: http://victoria-logs-victoria-logs-cluster-vlselect.monitoring.svc.cluster.local:9471/
         access: proxy
         jsonData:
           maxLines: 1000
