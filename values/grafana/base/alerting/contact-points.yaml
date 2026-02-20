@@ -1,0 +1,15 @@
+alerting:
+  contactpoints.yaml:
+    apiVersion: 1
+    contactPoints:
+      - orgId: 1
+        name: microsoft-teams
+        receivers:
+          - uid: teams-webhook
+            type: webhook
+            settings:
+              url: ${TEAMS_WEBHOOK_URL}
+              httpMethod: POST
+              maxAlerts: "1"
+              message: '{{ template "teams.adaptive_card" . }}'
+            disableResolveMessage: false

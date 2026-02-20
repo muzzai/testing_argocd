@@ -1,0 +1,39 @@
+# Grafana base values (core)
+# NOTE: Before first deploy, create these secrets manually:
+#   kubectl -n monitoring create secret generic grafana-admin-credentials \
+#     --from-literal=admin-user=admin \
+#     --from-literal=admin-password=<YOUR_PASSWORD>
+#
+#   kubectl -n monitoring create secret generic grafana-teams-webhook \
+#     --from-literal=webhook-url=<TEAMS_WEBHOOK_URL>
+admin:
+  existingSecret: grafana-admin-credentials
+  userKey: admin-user
+  passwordKey: admin-password
+
+persistence:
+  enabled: true
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+
+env:
+  GF_INSTALL_PLUGINS: "victoriametrics-logs-datasource"
+
+envValueFrom:
+  TEAMS_WEBHOOK_URL:
+    secretKeyRef:
+      name: grafana-teams-webhook
+      key: webhook-url
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+  hosts:
+    - grafana.example.com
+  tls:
+    - secretName: grafana-tls
+      hosts:
+        - grafana.example.com

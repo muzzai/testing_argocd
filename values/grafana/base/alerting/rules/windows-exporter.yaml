@@ -1,0 +1,52 @@
+alerting:
+  rules.yaml:
+    apiVersion: 1
+    groups:
+      - orgId: 1
+        name: windows-exporter
+        folder: Infrastructure
+        interval: 1m
+        rules:
+          - uid: host-down
+            title: HostDown
+            condition: C
+            data:
+              - refId: A
+                relativeTimeRange:
+                  from: 300
+                  to: 0
+                datasourceUid: victoria-metrics
+                model:
+                  refId: A
+                  expr: up{job="windows_exporter"}
+                  instant: true
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+              - refId: B
+                relativeTimeRange:
+                  from: 3600
+                  to: 0
+                datasourceUid: victoria-metrics
+                model:
+                  refId: B
+                  expr: max_over_time(up{job="windows_exporter"}[1h])
+                  instant: true
+                  intervalMs: 1000
+                  maxDataPoints: 43200
+              - refId: C
+                relativeTimeRange:
+                  from: 0
+                  to: 0
+                datasourceUid: __expr__
+                model:
+                  refId: C
+                  type: math
+                  expression: "$A == 0 && $B == 1"
+            noDataState: OK
+            execErrState: Error
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Host {{ $labels.instance }} IS DOWN!"
+              description: "Host {{ $labels.instance }} (job={{ $labels.job }}) has been down for more than 2 minutes. The host was up within the past hour."

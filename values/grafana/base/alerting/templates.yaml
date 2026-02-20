@@ -1,0 +1,60 @@
+alerting:
+  templates.yaml:
+    apiVersion: 1
+    templates:
+      - orgId: 1
+        name: teams_adaptive_card
+        template: |
+          {{ define "teams.adaptive_card" -}}
+          {{ $alert := (index .Alerts 0) -}}
+          {
+            "type": "message",
+            "attachments": [{
+              "contentType": "application/vnd.microsoft.card.adaptive",
+              "contentUrl": null,
+              "content": {
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "type": "AdaptiveCard",
+                "version": "1.4",
+                "msteams": {"width": "Full"},
+                "body": [
+                  {
+                    "type": "TextBlock",
+                    "size": "Large",
+                    "weight": "Bolder",
+                    "color": "{{ if eq $alert.Status \"firing\" }}Attention{{ else }}Good{{ end }}",
+                    "text": "{{ if eq $alert.Status \"firing\" }}🔴 Host {{ $alert.Labels.instance }} IS DOWN!{{ else }}✅ Host {{ $alert.Labels.instance }} IS UP{{ end }}"
+                  },
+                  {
+                    "type": "FactSet",
+                    "facts": [
+                      {"title": "Instance", "value": "{{ $alert.Labels.instance }}"},
+                      {"title": "Job", "value": "{{ $alert.Labels.job }}"},
+                      {"title": "Severity", "value": "{{ $alert.Labels.severity }}"},
+                      {"title": "Status", "value": "{{ $alert.Status }}"},
+                      {"title": "Started", "value": "{{ $alert.StartsAt }}"}
+                    ]
+                  },
+                  {
+                    "type": "TextBlock",
+                    "text": "{{ $alert.Annotations.summary }}",
+                    "wrap": true,
+                    "spacing": "Medium"
+                  }
+                ],
+                "actions": [
+                  {
+                    "type": "Action.OpenUrl",
+                    "title": "🔗 View Alert",
+                    "url": "{{ $alert.GeneratorURL }}"
+                  },
+                  {
+                    "type": "Action.OpenUrl",
+                    "title": "🔇 Silence Alert",
+                    "url": "{{ $alert.SilenceURL }}"
+                  }
+                ]
+              }
+            }]
+          }
+          {{- end }}

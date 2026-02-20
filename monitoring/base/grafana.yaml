@@ -17,7 +17,13 @@ spec:
       targetRevision: grafana-10.5.15
       helm:
         valueFiles:
-          - $values/values/grafana/base.yaml
+          - $values/values/grafana/base/core.yaml
+          - $values/values/grafana/base/datasources/victoria.yaml
+          - $values/values/grafana/base/dashboards/sidecar.yaml
+          - $values/values/grafana/base/alerting/templates.yaml
+          - $values/values/grafana/base/alerting/contact-points.yaml
+          - $values/values/grafana/base/alerting/policies.yaml
+          - $values/values/grafana/base/alerting/rules/windows-exporter.yaml
     - repoURL: git@github.com:muzzai/testing_argocd.git
       targetRevision: main
       ref: values
