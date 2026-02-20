@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@gitlab.alloysoftware.com:maintainers/gitops.git
+    repoURL: git@github.com:muzzai/testing_argocd.git
     targetRevision: main
     path: apps/envs/prod
   destination:

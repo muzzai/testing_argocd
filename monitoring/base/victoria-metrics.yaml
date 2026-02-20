@@ -18,7 +18,7 @@ spec:
       helm:
         valueFiles:
           - $values/values/victoria-metrics-cluster/base.yaml
-    - repoURL: git@gitlab.alloysoftware.com:maintainers/gitops.git
+    - repoURL: git@github.com:muzzai/testing_argocd.git
       targetRevision: main
       ref: values
   destination:
