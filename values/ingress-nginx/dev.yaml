@@ -2,6 +2,8 @@
 # Dev runs on self-managed k8s on EC2 (no LoadBalancer support).
 controller:
   replicaCount: 1
+  hostPort:
+    enabled: true
   service:
     type: NodePort
     nodePorts:
