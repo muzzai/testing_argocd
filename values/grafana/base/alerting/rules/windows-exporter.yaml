@@ -48,5 +48,5 @@ alerting:
             labels:
               severity: critical
             annotations:
-              summary: "Host {{ $labels.instance }} IS DOWN!"
-              description: "Host {{ $labels.instance }} (job={{ $labels.job }}) has been down for more than 2 minutes. The host was up within the past hour."
+              summary: "Host {{ \"{{\" }} $labels.instance {{ \"}}\" }} IS DOWN!"
+              description: "Host {{ \"{{\" }} $labels.instance {{ \"}}\" }} (job={{ \"{{\" }} $labels.job {{ \"}}\" }}) has been down for more than 2 minutes. The host was up within the past hour."

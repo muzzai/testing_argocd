@@ -11,5 +11,5 @@ alerting:
               url: ${TEAMS_WEBHOOK_URL}
               httpMethod: POST
               maxAlerts: "1"
-              message: '{{ template "teams.adaptive_card" . }}'
+              message: 'Grafana alert notification'
             disableResolveMessage: false
