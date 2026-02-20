@@ -24,6 +24,13 @@ patches:
         value: $values/values/grafana/dev.yaml
   - target:
       kind: Application
+      name: monitoring-certificates
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: manifests/monitoring-certificates/envs/dev
+  - target:
+      kind: Application
       name: victoria-metrics
     patch: |-
       - op: add

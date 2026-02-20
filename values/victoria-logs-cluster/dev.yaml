@@ -12,7 +12,7 @@ vlselect:
       - name: logs-query.alloysoftware.us
         path: /
     tls:
-      - secretName: victoria-logs-tls
+      - secretName: alloysoftware-us-tls
         hosts:
           - logs-query.alloysoftware.us
 
@@ -21,13 +21,11 @@ vlinsert:
   ingress:
     enabled: true
     ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
     hosts:
       - name: logs.alloysoftware.us
         path: /
     tls:
-      - secretName: victoria-logs-tls
+      - secretName: alloysoftware-us-tls
         hosts:
           - logs.alloysoftware.us
   resources:

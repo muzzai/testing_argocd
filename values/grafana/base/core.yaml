@@ -29,8 +29,6 @@ envValueFrom:
 ingress:
   enabled: true
   ingressClassName: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
   hosts:
     - grafana.example.com
   tls:

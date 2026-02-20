@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - target:
+      kind: Certificate
+      name: monitoring-shared-tls
+    patch: |-
+      - op: replace
+        path: /spec/secretName
+        value: alloysoftware-us-tls
+      - op: replace
+        path: /spec/dnsNames
+        value:
+          - grafana.alloysoftware.us
+          - metrics.alloysoftware.us
+          - push.alloysoftware.us
+          - logs.alloysoftware.us
+          - logs-query.alloysoftware.us

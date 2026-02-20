@@ -17,7 +17,7 @@ ingress:
   hosts:
     - grafana.alloysoftware.us
   tls:
-    - secretName: grafana-tls
+    - secretName: alloysoftware-us-tls
       hosts:
         - grafana.alloysoftware.us
 

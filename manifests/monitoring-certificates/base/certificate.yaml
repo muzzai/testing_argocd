@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: monitoring-shared-tls
+  namespace: monitoring
+spec:
+  secretName: monitoring-shared-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+    - grafana.example.com
+    - metrics.example.com
+    - push.example.com
+    - logs.example.com
+    - logs-query.example.com
