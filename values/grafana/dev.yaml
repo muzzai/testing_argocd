@@ -1,5 +1,7 @@
 # Grafana DEV overrides
 replicas: 1
+initChownData:
+  enabled: false
 resources:
   requests:
     cpu: 100m
