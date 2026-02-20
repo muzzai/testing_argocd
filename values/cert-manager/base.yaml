@@ -1,6 +1,5 @@
 # cert-manager base values
 replicaCount: 1
-installCRDs: true
 prometheus:
   enabled: true
   servicemonitor:
