@@ -1,0 +1,31 @@
+# DEV environment: auto-sync enabled, sources point to dev overlays
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # Auto-sync for all apps in dev
+  - target:
+      kind: Application
+    patch: |-
+      - op: add
+        path: /spec/syncPolicy/automated
+        value:
+          prune: true
+          selfHeal: true
+  # infrastructure → dev overlay
+  - target:
+      kind: Application
+      name: infrastructure
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: infrastructure/envs/dev
+  # monitoring → dev overlay
+  - target:
+      kind: Application
+      name: monitoring
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: monitoring/envs/dev

@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # VictoriaMetrics backup → prod S3 bucket
+  - target:
+      kind: CronJob
+      name: vmbackup
+    patch: |-
+      - op: replace
+        path: /spec/jobTemplate/spec/template/spec/containers/0/args/1
+        value: "-dst=s3://monitoring-backups-prod/vmbackup/"
+  # VictoriaLogs backup → prod S3 bucket
+  - target:
+      kind: CronJob
+      name: vlbackup
+    patch: |-
+      - op: replace
+        path: /spec/jobTemplate/spec/template/spec/containers/0/args/1
+        value: "-dst=s3://monitoring-backups-prod/vlbackup/"
+  # IRSA role ARN for prod (EKS)
+  - target:
+      kind: ServiceAccount
+      name: monitoring-backup
+    patch: |-
+      - op: add
+        path: /metadata/annotations
+        value:
+          eks.amazonaws.com/role-arn: "arn:aws:iam::<ACCOUNT_ID>:role/monitoring-backup-prod"

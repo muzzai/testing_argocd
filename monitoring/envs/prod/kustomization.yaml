@@ -1,0 +1,28 @@
+# PROD: manual sync + prod values
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # ── Helm-based: add prod values file ──
+  - target:
+      kind: Application
+      name: grafana
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/grafana/prod.yaml
+  - target:
+      kind: Application
+      name: victoria-metrics
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/victoria-metrics-cluster/prod.yaml
+  - target:
+      kind: Application
+      name: victoria-logs
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/victoria-logs-cluster/prod.yaml

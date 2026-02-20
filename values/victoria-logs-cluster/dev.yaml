@@ -1,0 +1,42 @@
+# VictoriaLogs Cluster DEV overrides
+vlselect:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  ingress:
+    hosts:
+      - name: logs.alloysoftware.us
+        path: /
+    tls:
+      - secretName: victoria-logs-tls
+        hosts:
+          - logs.alloysoftware.us
+
+vlinsert:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+vlstorage:
+  replicaCount: 1
+  retentionPeriod: "7d"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi

@@ -1,0 +1,15 @@
+# ingress-nginx DEV overrides
+# Dev runs on self-managed k8s on EC2 (no LoadBalancer support).
+controller:
+  replicaCount: 1
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi

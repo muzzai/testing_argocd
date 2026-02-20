@@ -1,0 +1,15 @@
+# ingress-nginx base values
+controller:
+  replicaCount: 2
+  service:
+    type: LoadBalancer
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: false            # enable when ServiceMonitor CRD is available
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+  ingressClassResource:
+    name: nginx
+    default: true

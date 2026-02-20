@@ -1,0 +1,17 @@
+# Bootstrap Application for PROD cluster.
+# Apply manually: kubectl apply -f bootstrap/prod.yaml
+# Prod uses manual sync only.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@gitlab.alloysoftware.com:maintainers/gitops.git
+    targetRevision: main
+    path: apps/envs/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd

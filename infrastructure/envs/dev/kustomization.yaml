@@ -1,0 +1,47 @@
+# DEV: auto-sync + env-specific values / paths
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # ── auto-sync for every Application ──
+  - target:
+      kind: Application
+    patch: |-
+      - op: add
+        path: /spec/syncPolicy/automated
+        value:
+          prune: true
+          selfHeal: true
+
+  # ── Helm-based: add dev values file ──
+  - target:
+      kind: Application
+      name: ingress-nginx
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/ingress-nginx/dev.yaml
+  - target:
+      kind: Application
+      name: cert-manager
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/cert-manager/dev.yaml
+
+  # ── Kustomize-based: switch to dev overlay ──
+  - target:
+      kind: Application
+      name: cluster-issuer
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: manifests/cluster-issuer/envs/dev
+  - target:
+      kind: Application
+      name: backup
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: manifests/backup/envs/dev

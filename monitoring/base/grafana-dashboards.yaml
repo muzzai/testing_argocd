@@ -1,0 +1,30 @@
+# Grafana dashboards (Jsonnet → ConfigMaps with label grafana_dashboard).
+# ArgoCD compiles .jsonnet files at sync time — no CI required.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-dashboards
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: monitoring
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@gitlab.alloysoftware.com:maintainers/gitops.git
+    targetRevision: main
+    path: dashboards
+    directory:
+      jsonnet:
+        libs:
+          - vendor/
+          - lib/
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,46 @@
+# VictoriaMetrics Cluster base values
+vmselect:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - name: metrics.example.com
+        path: /
+    tls:
+      - secretName: victoria-metrics-tls
+        hosts:
+          - metrics.example.com
+
+vminsert:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+vmstorage:
+  replicaCount: 2
+  retentionPeriod: "30d"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 50Gi
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      memory: 1Gi

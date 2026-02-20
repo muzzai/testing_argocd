@@ -1,0 +1,30 @@
+# VictoriaMetrics Cluster PROD overrides — HA + long retention
+vmselect:
+  replicaCount: 3
+  ingress:
+    hosts:
+      - name: metrics.alloysoftware.com
+        path: /
+    tls:
+      - secretName: victoria-metrics-tls
+        hosts:
+          - metrics.alloysoftware.com
+
+vminsert:
+  replicaCount: 3
+
+vmstorage:
+  replicaCount: 3
+  retentionPeriod: "90d"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 200Gi
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      memory: 4Gi

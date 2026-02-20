@@ -1,0 +1,22 @@
+# PROD environment: manual sync only, sources point to prod overlays
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # infrastructure → prod overlay
+  - target:
+      kind: Application
+      name: infrastructure
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: infrastructure/envs/prod
+  # monitoring → prod overlay
+  - target:
+      kind: Application
+      name: monitoring
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: monitoring/envs/prod

@@ -1,0 +1,46 @@
+# VictoriaLogs Cluster base values
+vlselect:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
+      - name: logs.example.com
+        path: /
+    tls:
+      - secretName: victoria-logs-tls
+        hosts:
+          - logs.example.com
+
+vlinsert:
+  replicaCount: 2
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+
+vlstorage:
+  replicaCount: 2
+  retentionPeriod: "30d"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 50Gi
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      memory: 1Gi

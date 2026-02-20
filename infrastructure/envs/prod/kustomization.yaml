@@ -1,0 +1,37 @@
+# PROD: manual sync + env-specific values / paths
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # ── Helm-based: add prod values file ──
+  - target:
+      kind: Application
+      name: ingress-nginx
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/ingress-nginx/prod.yaml
+  - target:
+      kind: Application
+      name: cert-manager
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/cert-manager/prod.yaml
+
+  # ── Kustomize-based: switch to prod overlay ──
+  - target:
+      kind: Application
+      name: cluster-issuer
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: manifests/cluster-issuer/envs/prod
+  - target:
+      kind: Application
+      name: backup
+    patch: |-
+      - op: replace
+        path: /spec/source/path
+        value: manifests/backup/envs/prod

@@ -1,0 +1,60 @@
+# Daily VictoriaMetrics backup via vmbackup.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vmbackup
+spec:
+  schedule: "0 2 * * *"                     # 02:00 UTC daily
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          serviceAccountName: monitoring-backup
+          containers:
+            - name: vmbackup
+              image: victoriametrics/vmbackup:v1.108.1
+              args:
+                - -storageDataPath=/vmstorage-data
+                - -dst=s3://monitoring-backups/vmbackup/    # patched per env
+                - -snapshotCreateURL=http://vmc-victoria-metrics-cluster-vmstorage.monitoring.svc:8482/snapshot/create
+                - -snapshotDeleteURL=http://vmc-victoria-metrics-cluster-vmstorage.monitoring.svc:8482/snapshot/delete
+          restartPolicy: OnFailure
+---
+# Daily VictoriaLogs backup via vmbackup.
+# vmbackup supports VictoriaLogs snapshots since v1.97.0+.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vlbackup
+spec:
+  schedule: "0 3 * * *"                     # 03:00 UTC daily (offset from vmbackup)
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          serviceAccountName: monitoring-backup
+          containers:
+            - name: vlbackup
+              image: victoriametrics/vmbackup:v1.108.1
+              args:
+                - -storageDataPath=/vlstorage-data
+                - -dst=s3://monitoring-backups/vlbackup/    # patched per env
+                - -snapshotCreateURL=http://vlc-victoria-logs-cluster-vlstorage.monitoring.svc:9491/snapshot/create
+                - -snapshotDeleteURL=http://vlc-victoria-logs-cluster-vlstorage.monitoring.svc:9491/snapshot/delete
+          restartPolicy: OnFailure
+---
+# ServiceAccount for backup CronJobs.
+# On EKS (prod): IRSA annotation is added via overlay.
+# On k3s (dev): IAM Instance Profile on EC2 provides S3 access — no annotation needed.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: monitoring-backup

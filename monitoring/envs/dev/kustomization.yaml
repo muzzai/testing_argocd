@@ -1,0 +1,38 @@
+# DEV: auto-sync + dev values
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  # ── auto-sync for every monitoring Application ──
+  - target:
+      kind: Application
+    patch: |-
+      - op: add
+        path: /spec/syncPolicy/automated
+        value:
+          prune: true
+          selfHeal: true
+
+  # ── Helm-based: add dev values file ──
+  - target:
+      kind: Application
+      name: grafana
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/grafana/dev.yaml
+  - target:
+      kind: Application
+      name: victoria-metrics
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/victoria-metrics-cluster/dev.yaml
+  - target:
+      kind: Application
+      name: victoria-logs
+    patch: |-
+      - op: add
+        path: /spec/sources/0/helm/valueFiles/-
+        value: $values/values/victoria-logs-cluster/dev.yaml

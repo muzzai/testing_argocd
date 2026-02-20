@@ -1,0 +1,30 @@
+# VictoriaLogs Cluster PROD overrides
+vlselect:
+  replicaCount: 3
+  ingress:
+    hosts:
+      - name: logs.alloysoftware.com
+        path: /
+    tls:
+      - secretName: victoria-logs-tls
+        hosts:
+          - logs.alloysoftware.com
+
+vlinsert:
+  replicaCount: 3
+
+vlstorage:
+  replicaCount: 3
+  retentionPeriod: "90d"
+  storage:
+    volumeClaimTemplate:
+      spec:
+        resources:
+          requests:
+            storage: 200Gi
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      memory: 4Gi

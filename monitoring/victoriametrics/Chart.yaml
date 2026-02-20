@@ -1,9 +1,0 @@
-apiVersion: v2
-name: victoria-metrics-cluster-wrapper
-description: Local wrapper chart for VictoriaMetrics cluster via upstream chart
-type: application
-version: 0.1.0
-dependencies:
-  - name: victoria-metrics-cluster
-    version: 0.35.0
-    repository: https://victoriametrics.github.io/helm-charts
