@@ -9,15 +9,27 @@ vlselect:
       memory: 256Mi
   ingress:
     hosts:
+      - name: logs-query.alloysoftware.us
+        path: /
+    tls:
+      - secretName: victoria-logs-tls
+        hosts:
+          - logs-query.alloysoftware.us
+
+vlinsert:
+  replicaCount: 1
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
       - name: logs.alloysoftware.us
         path: /
     tls:
       - secretName: victoria-logs-tls
         hosts:
           - logs.alloysoftware.us
-
-vlinsert:
-  replicaCount: 1
   resources:
     requests:
       cpu: 50m

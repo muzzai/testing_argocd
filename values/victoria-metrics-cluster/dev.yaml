@@ -9,15 +9,27 @@ vmselect:
       memory: 256Mi
   ingress:
     hosts:
+      - name: metrics.alloysoftware.us
+        path: /
+    tls:
+      - secretName: victoria-metrics-tls
+        hosts:
+          - metrics.alloysoftware.us
+
+vminsert:
+  replicaCount: 1
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+    hosts:
       - name: push.alloysoftware.us
         path: /
     tls:
       - secretName: victoria-metrics-tls
         hosts:
           - push.alloysoftware.us
-
-vminsert:
-  replicaCount: 1
   resources:
     requests:
       cpu: 50m
