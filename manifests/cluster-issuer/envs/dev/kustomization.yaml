@@ -13,4 +13,4 @@ patches:
         value: https://acme-staging-v02.api.letsencrypt.org/directory
       - op: replace
         path: /spec/acme/email
-        value: dev-admin@example.com
+        value: dev-admin@alloysoftware.us
